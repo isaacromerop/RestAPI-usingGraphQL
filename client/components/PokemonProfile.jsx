@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import Router from "next/router";
+import { useRouter } from "next/router";
 
 const GET_POKEMON = gql`
   query getPokemon($input: String!) {
@@ -18,6 +18,7 @@ const GET_POKEMON = gql`
 `;
 
 const PokemonProfile = ({ url, name }) => {
+  const router = useRouter();
   const { data, loading } = useQuery(GET_POKEMON, {
     variables: {
       input: url,
@@ -26,7 +27,7 @@ const PokemonProfile = ({ url, name }) => {
   if (loading) return <h1>Loading...</h1>;
 
   const handleClick = (name) => {
-    Router.push({
+    router.push({
       pathname: "/pokemon/[name]",
       query: { name },
     });
