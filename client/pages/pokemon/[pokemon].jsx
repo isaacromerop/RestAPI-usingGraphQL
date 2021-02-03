@@ -31,7 +31,6 @@ const Pokemon = () => {
     variables: { input: `https://pokeapi.co/api/v2/pokemon/${name}` },
   });
   if (loading) return <h1>Loading...</h1>;
-  console.log(data.getPokemon);
   return (
     <div>
       <button onClick={() => router.back()}>Go back</button>

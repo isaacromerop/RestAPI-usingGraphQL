@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-import { useRouter } from "next/router";
+import { Card, Image, Button, Icon } from "semantic-ui-react";
 
 const GET_POKEMON = gql`
   query getPokemon($input: String!) {
@@ -13,35 +13,40 @@ const GET_POKEMON = gql`
         front_default
       }
       location_area_encounters
+      types {
+        type {
+          name
+        }
+      }
     }
   }
 `;
 
-const PokemonProfile = ({ url, name }) => {
-  const router = useRouter();
+const PokemonProfile = ({ url }) => {
   const { data, loading } = useQuery(GET_POKEMON, {
     variables: {
       input: url,
     },
   });
   if (loading) return <h1>Loading...</h1>;
-
-  const handleClick = (name) => {
-    router.push({
-      pathname: "/pokemon/[name]",
-      query: { name },
-    });
-  };
   return (
-    <div>
-      <img
-        src={data.getPokemon.sprites.front_default}
-        alt={name}
-        width="100"
-        height="100"
-      />
-      <li onClick={() => handleClick(name)}>{name}</li>
-    </div>
+    <Card>
+      <Image src={data.getPokemon.sprites.front_default} wrapped ui={false} />
+      <Card.Content>
+        <Card.Header>{data.getPokemon.name.toUpperCase()}</Card.Header>
+        <Card.Meta>
+          <Icon name="resize vertical" />:{data.getPokemon.height / 10}m |{" "}
+          <Icon name="weight" />:{data.getPokemon.weight / 10}kg
+        </Card.Meta>
+        <Card.Description>
+          {data.getPokemon.types.map((type, index) => (
+            <Button circular basic key={index}>
+              {type.type.name}
+            </Button>
+          ))}
+        </Card.Description>
+      </Card.Content>
+    </Card>
   );
 };
 
